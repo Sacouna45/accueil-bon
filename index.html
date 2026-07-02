@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portail des Demandes Informatiques</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap');
+
+  :root {
+    --blue-deep: #1A3A5C;
+    --blue-mid: #2D7DD2;
+    --blue-light: #E8F1FB;
+    --blue-pale: #F0F6FF;
+    --ink: #0D1B2A;
+    --muted: #64748B;
+    --border: #CBD5E1;
+    --bg: #F1F5F9;
+    --white: #FFFFFF;
+    --green: #16A34A;
+    --orange: #EA580C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 16px;
+  }
+
+  /* Header principal */
+  .portal-header {
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 600px;
+  }
+  
+  .portal-logo {
+    width: 64px; height: 64px;
+    background: var(--blue-mid);
+    border-radius: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(45, 125, 210, 0.25);
+  }
+  .portal-logo svg { width: 34px; height: 34px; }
+
+  .portal-header h1 {
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--blue-deep); line-height: 1.2;
+  }
+  .portal-header p {
+    font-size: 0.9rem; color: var(--muted); margin-top: 6px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  /* Grille des boutons / Cartes */
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 840px;
+    width: 100%;
+  }
+
+  .hub-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(26,58,92,.04);
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  /* Bandes de couleur distinctes au survol */
+  .hub-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 5px;
+    background: var(--border);
+    transition: background 0.22s ease;
+  }
+
+  .hub-card.loan::before { background: var(--orange); }
+  .hub-card.incident::before { background: var(--blue-mid); }
+
+  .hub-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(26,58,92,.09);
+  }
+  .hub-card.loan:hover { border-color: var(--orange); }
+  .hub-card.incident:hover { border-color: var(--blue-mid); }
+
+  /* Icônes des cartes */
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .loan .card-icon { background: #FFF7ED; color: var(--orange); }
+  .incident .card-icon { background: var(--blue-pale); color: var(--blue-mid); }
+
+  .hub-card h2 {
+    font-size: 1.15rem; font-weight: 700;
+    color: var(--blue-deep); margin-bottom: 8px;
+  }
+
+  .hub-card p {
+    font-size: 0.88rem; color: var(--muted);
+    line-height: 1.45; margin-bottom: 24px;
+  }
+
+  /* Flèche d'action */
+  .card-action {
+    margin-top: auto;
+    font-size: 0.82rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    display: flex; align-items: center; gap: 6px;
+    transition: gap 0.2s ease;
+  }
+  .loan .card-action { color: var(--orange); }
+  .incident .card-action { color: var(--blue-mid); }
+
+  .hub-card:hover .card-action {
+    gap: 10px;
+  }
+
+  /* Pied de page */
+  .portal-footer {
+    margin-top: 50px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    .hub-grid { grid-template-columns: 1fr; gap: 16px; }
+    body { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="portal-header">
+  <div class="portal-logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <path d="M9 10h6M9 14h6M9 6h1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <h1>COLLEGE ASSELIN DE BEAUVILLE</h1>
+  <p>Portail de services informatiques</p>
+</div>
+
+<div class="hub-grid">
+
+  <a href="bon-de-pret.html" class="hub-card loan">
+    <div class="card-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+      </svg>
+    </div>
+    <h2>Prêt de Matériel</h2>
+    <p>Vous avez besoin de matériel pour un cours ou une réunion ? Faites votre demande de réservation ici.</p>
+    <div class="card-action">
+      Ouvrir le formulaire
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 5"></polyline></svg>
+    </div>
+  </a>
+
+ 
+  <a href="bon-d-intervention.html" class="hub-card incident">
+    <div class="card-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+      </svg>
+    </div>
+    <h2>Intervention Informatique</h2>
+    <p>Un équipement en panne, un problème de connexion réseau, une imprimante bloquée ou un problème logiciel ? Signalez l'incident au service technique.</p>
+    <div class="card-action">
+      Ouvrir le formulaire
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 5"></polyline></svg>
+    </div>
+  </a>
+
+
+  <a href="bon-de-demande.html" class="hub-card incident">
+    <div class="card-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+      </svg>
+    </div>
+    <h2>Demande d'équipement</h2>
+    <p>Vous avez besoin d'un équipement informatique pour un projet ou une activité pédagogique ? Faites votre demande ici.</p>
+    <div class="card-action">
+      Ouvrir le formulaire
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 5"></polyline></svg>
+    </div>
+  </a>
+
+</div>
+
+<div class="portal-footer">
+  &copy; 2026 — Service Informatique & Numérique
+</div>
+
+</body>
+</html>
