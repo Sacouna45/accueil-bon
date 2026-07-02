@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demande de Matériel Informatique</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+  :root {
+    --blue-deep: #1A3A5C;
+    --blue-mid: #2D7DD2;
+    --blue-light: #E8F1FB;
+    --blue-pale: #F0F6FF;
+    --ink: #0D1B2A;
+    --muted: #64748B;
+    --border: #CBD5E1;
+    --bg: #F1F5F9;
+    --white: #FFFFFF;
+    --green: #16A34A;
+    --green-light: #DCFCE7;
+    --red: #DC2626;
+    --orange: #EA580C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  /* ─── Header Centré ──────────────── */
+  .page-header {
+    max-width: 860px;
+    margin: 0 auto 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .header-logo {
+    width: 56px; height: 56px;
+    background: var(--blue-mid);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .header-logo svg { width: 30px; height: 30px; }
+  
+  .header-text {
+    text-align: center;
+  }
+  .header-text h1 {
+    font-size: 2.2rem; font-weight: 700;
+    color: var(--blue-deep); line-height: 1.2;
+  }
+  .header-text p {
+    font-size: 1.2rem; color: var(--muted); margin-top: 3px;
+    font-weight: 400;
+  }
+
+  /* ─── Card ────────────────────────────────── */
+  .card {
+    max-width: 860px;
+    margin: 0 auto 20px;
+    background: var(--white);
+    border-radius: 18px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(26,58,92,.07);
+  }
+  .card-band {
+    height: 6px;
+    background: linear-gradient(90deg, var(--blue-mid) 0%, var(--blue-deep) 100%);
+  }
+  .card-body { padding: 32px 36px 36px; }
+
+  /* ─── Section titles ──────────────────────── */
+  .section-title {
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--blue-mid);
+    border-left: 3px solid var(--blue-mid);
+    padding-left: 10px;
+    margin-bottom: 18px;
+  }
+
+  /* ─── Grid fields ─────────────────────────── */
+  .field-grid {
+    display: grid;
+    gap: 14px 20px;
+    margin-bottom: 28px;
+  }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 2fr 1fr 2fr; }
+  .g1 { grid-template-columns: 1fr; }
+
+  .field label {
+    display: block;
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 13px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--white);
+    transition: border-color .18s, box-shadow .18s;
+    outline: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--blue-mid);
+    box-shadow: 0 0 0 3px rgba(45,125,210,.12);
+  }
+  .field textarea { resize: vertical; min-height: 72px; }
+
+  /* ─── Demande items ──────────────────────── */
+  #materiel-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; }
+  .materiel-item {
+    background: var(--blue-pale);
+    border: 1.5px solid #BFDBFE;
+    border-radius: 12px;
+    padding: 18px 20px 16px;
+    position: relative;
+  }
+  .materiel-item .item-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .item-badge {
+    font-size: 0.72rem; font-weight: 700;
+    background: var(--blue-mid); color: #fff;
+    border-radius: 20px; padding: 3px 11px;
+    letter-spacing: .05em;
+  }
+  .btn-remove-item {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 1.1rem;
+    padding: 2px 6px; border-radius: 6px;
+    transition: color .18s, background .18s;
+  }
+  .btn-remove-item:hover { color: var(--red); background: #FEE2E2; }
+  
+  .btn-add-item {
+    background: none;
+    border: 2px dashed var(--blue-mid);
+    color: var(--blue-mid);
+    border-radius: 10px;
+    padding: 10px 0;
+    width: 100%; cursor: pointer;
+    font-size: 0.88rem; font-weight: 600;
+    transition: background .18s;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .btn-add-item:hover { background: var(--blue-light); }
+
+  /* Zone logicielle conditionnelle */
+  .software-field-box {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed #BFDBFE;
+  }
+
+  /* ─── Divider ─────────────────────────────── */
+  .divider {
+    border: none;
+    border-top: 1.5px solid var(--border);
+    margin: 28px 0;
+  }
+
+  /* ─── Engagement checkbox ─────────────────── */
+  .engagement-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #F8FAFC;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 28px;
+  }
+  .engagement-box input {
+    margin-top: 3px;
+    width: 16px; height: 16px;
+    cursor: pointer;
+  }
+  .engagement-box label {
+    font-size: 0.85rem;
+    color: #334155;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  /* ─── Footer actions ──────────────────────── */
+  .form-actions {
+    max-width: 860px; margin: 0 auto;
+    display: flex; justify-content: center;
+  }
+
+  .btn-send-flask {
+    background: #16A34A; color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 36px; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+  }
+  .btn-send-flask:hover { background: #15803D; }
+  .btn-send-flask:disabled {
+    background: #64748B;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  /* Spinner de chargement */
+  .spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── Toast ───────────────────────────────── */
+  #toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--green); color: #fff;
+    border-radius: 12px; padding: 14px 22px;
+    font-size: 0.9rem; font-weight: 600;
+    box-shadow: 0 6px 24px rgba(0,0,0,.15);
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .3s, transform .3s;
+    pointer-events: none; z-index: 999;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  .demande-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--muted);
+    background: var(--bg);
+    border-radius: 7px; padding: 5px 12px;
+    letter-spacing: .06em;
+  }
+  .card-top-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 26px; flex-wrap: wrap; gap: 10px;
+  }
+
+  select option { color: var(--ink); }
+  .required-star { color: var(--red); margin-left: 2px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 20h9M3 20v-8a2 2 0 012-2h14a2 2 0 012 2v8M12 4v6M8 7h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>COLLÈGE ASSELIN DE BEAUVILLE</h1>
+    <p>Demande de mise à disposition de matériel informatique</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-band"></div>
+  <div class="card-body">
+
+    <div class="card-top-row">
+      <div class="demande-number">Ticket N° <span id="reqNum">—</span></div>
+    </div>
+
+    <div class="section-title">Demandeur</div>
+    <div class="field-grid g2">
+      <div class="field">
+        <label>Nom <span class="required-star">*</span></label>
+        <input type="text" id="nom" placeholder="Ex : Martin" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Prénom <span class="required-star">*</span></label>
+        <input type="text" id="prenom" placeholder="Ex : Thomas" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Service <span class="required-star">*</span></label>
+        <select id="service">
+          <option value="">— Sélectionner —</option>
+          <option>Administratif</option>
+          <option>Secrétariat</option>
+          <option>Informatique</option>
+          <option>Reprographie</option>
+          <option>Intendance</option>
+          <option>Pédagogique</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fonction <span class="required-star">*</span></label>
+        <input type="text" id="fonction" placeholder="Ex : Enseignant, Responsable informatique..." autocomplete="off">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-title">Descriptif de la demande</div>
+    <div id="materiel-list"></div>
+    <button class="btn-add-item" onclick="addItem()">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1v13M1 7.5h13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Ajouter un équipement à la liste
+    </button>
+
+    <hr class="divider">
+
+    <div class="section-title">Cadre et Période d'utilisation</div>
+    <div class="field-grid g2">
+      <div class="field">
+        <label>Date d'ouverture<span class="required-star">*</span></label>
+        <input type="date" id="dateDebut">
+      </div>
+      <div class="field">
+        <label>Date de mise à disposition souhaitée</label>
+        <input type="date" id="dateFin">
+      </div>
+      <div class="field g1" style="grid-column: span 2">
+        <label>Motif de la demande / Projet associé <span class="required-star">*</span></label>
+        <textarea id="motif" placeholder="Expliquez de manière détaillée votre besoin (Ex : TP, projet de fin d'année, remplacement matériel en panne...)&#10;NB : Lorsque votre demande sera traitée, vous recevrez un e-mail de confirmation via pronote"></textarea>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-title">Charte &amp; Engagement <span class="required-star">*</span></div>
+    <div class="engagement-box">
+      <input type="checkbox" id="engagementCheck">
+      <label for="engagementCheck">
+        <strong>Je m'engage sur l'honneur</strong> à prendre soin du matériel informatique qui me sera confié, à l'utiliser exclusivement dans le cadre pédagogique/professionnel prévu, et à le restituer propre et complet aux dates convenues.
+      </label>
+    </div>
+
+  </div>
+</div>
+
+<div class="form-actions">
+  <button class="btn-send-flask" id="btnSendEmail" onclick="envoyerDemande()">
+    <div class="spinner" id="btnSpinner"></div>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" id="btnIcon"><polyline points="22 2 11 13"></polyline><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    <span id="btnText">Envoyer la demande</span>
+  </button>
+</div>
+
+<div id="toast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">Demande prête !</span>
+</div>
+
+<script>
+let itemCount = 0;
+
+const TYPES = [
+  'PC Portable','PC Bureau','Écran','Clavier','Souris','Câble HDMI','Câble VGA','Câble réseau','Câble alimentation',
+  'Vidéoprojecteur Focal long','Vidéoprojecteur Focal court','Tablette','Imprimante','Scanner','Webcam','Casque audio','Disque dur','Clé USB','Hub USB',
+  'Adaptateur','Chargeur','Autres'
+];
+
+function init() {
+  document.getElementById('dateDebut').value = today();
+  document.getElementById('reqNum').textContent = generateTicketNumber();
+  addItem();
+}
+
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function generateTicketNumber() {
+  const now = new Date();
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const rand = String(Math.floor(Math.random()*9000)+1000);
+  return `REQ-${mm}-${rand}`;
+}
+
+function addItem() {
+  itemCount++;
+  const id = itemCount;
+  const list = document.getElementById('materiel-list');
+  const opts = TYPES.map(t => `<option>${t}</option>`).join('');
+  
+  const div = document.createElement('div');
+  div.className = 'materiel-item';
+  div.id = `item-${id}`;
+  div.innerHTML = `
+    <div class="item-header">
+      <span class="item-badge">Équipement ${id}</span>
+      <button class="btn-remove-item" onclick="removeItem(${id})" title="Supprimer">✕</button>
+    </div>
+    <div class="field-grid g3">
+      <div class="field">
+        <label>Type de matériel <span class="required-star">*</span></label>
+        <select id="type-${id}" onchange="checkMaterialType(${id})">${opts}</select>
+      </div>
+      <div class="field">
+        <label>Quantité <span class="required-star">*</span></label>
+        <input type="number" id="qte-${id}" value="1" min="1" max="10">
+      </div>
+      <div class="field">
+        <label>Destination / Spécifications <span class="required-star">*</span></label>
+        <input type="text" id="dest-${id}" placeholder="Ex : Salle B12, détails..." autocomplete="off">
+      </div>
+    </div>
+    <div id="software-box-${id}" class="software-field-box" style="display: none;">
+      <div class="field g1">
+        <label>Logiciels à installer / requis <span class="required-star">*</span></label>
+        <input type="text" id="softs-${id}" placeholder="Ex: Windows, Onlyoffice, Firefox..." autocomplete="off">
+      </div>
+    </div>
+  `;
+  list.appendChild(div);
+  checkMaterialType(id);
+}
+
+function removeItem(id) {
+  const el = document.getElementById(`item-${id}`);
+  if (el) el.remove();
+}
+
+function checkMaterialType(id) {
+  const selectEl = document.getElementById(`type-${id}`);
+  const softwareBox = document.getElementById(`software-box-${id}`);
+  
+  if (selectEl && selectEl.value === 'PC Portable') {
+    softwareBox.style.display = 'block';
+  } else {
+    softwareBox.style.display = 'none';
+    const softInput = document.getElementById('softs-' + id);
+    if (softInput) softInput.value = '';
+  }
+}
+
+function genererCorpsMail() {
+  const nom = document.getElementById('nom').value.trim();
+  const prenom = document.getElementById('prenom').value.trim();
+  const service = document.getElementById('service').value;
+  const fonction = document.getElementById('fonction').value.trim();
+  const dateDebut = document.getElementById('dateDebut').value;
+  const dateFin = document.getElementById('dateFin').value;
+  const motif = document.getElementById('motif').value.trim();
+  const ticketNumber = document.getElementById('reqNum').textContent.trim();
+
+  const items = Array.from(document.querySelectorAll('#materiel-list .materiel-item')).map((item) => {
+    const internalId = item.id.replace('item-','');
+    return {
+      type: document.getElementById(`type-${internalId}`)?.value || '',
+      quantite: document.getElementById(`qte-${internalId}`)?.value || '1',
+      destination: document.getElementById(`dest-${internalId}`)?.value.trim() || '',
+      logiciels: document.getElementById(`softs-${internalId}`)?.value.trim() || ''
+    };
+  });
+
+  const sujet = `[DEMANDE MATÉRIEL] ${ticketNumber} - ${nom.toUpperCase()} ${prenom}`;
+  
+  let corpsMail = `Bonjour,\n\n`;
+  corpsMail += `Une nouvelle demande de matériel informatique vient d'être soumise via le portail.\n\n`;
+  corpsMail += `=== DOSSIER : ${ticketNumber} ===\n`;
+  corpsMail += `Demandeur : ${nom.toUpperCase()} ${prenom} (${fonction})\n`;
+  corpsMail += `Service émetteur : ${service}\n\n`;
+  
+  corpsMail += `=== LISTE DU MATÉRIEL SOUHAITÉ ===\n`;
+  items.forEach((item, index) => {
+    corpsMail += `- Équipement ${index + 1} : ${item.type} (Quantité : ${item.quantite}) — Destination : ${item.destination}`;
+    if(item.logiciels) {
+      corpsMail += ` | Logiciels requis : ${item.logiciels}`;
+    }
+    corpsMail += `\n`;
+  });
+  corpsMail += `\n`;
+  
+  corpsMail += `=== PÉRIODE & MOTIF ===\n`;
+  corpsMail += `Date d'ouverture : ${dateDebut}\n`;
+  corpsMail += `Date de mise à disposition : ${dateFin ? dateFin : 'Non spécifiée'}\n`;
+  corpsMail += `Motif du projet :\n${motif}\n\n`;
+  
+  corpsMail += `✓ Charte d'engagement validée sur l'honneur par l'utilisateur.\n`;
+  corpsMail += `--------------------------------------------------\n`;
+  corpsMail += `Message généré automatiquement par le Portail Demandes.`;
+
+  return { sujet, corpsMail, ticketNumber };
+}
+
+async function envoyerDemande() {
+  const nom = document.getElementById('nom').value.trim();
+  const prenom = document.getElementById('prenom').value.trim();
+  const service = document.getElementById('service').value;
+  const fonction = document.getElementById('fonction').value.trim();
+  const dateDebut = document.getElementById('dateDebut').value;
+  const motif = document.getElementById('motif').value.trim();
+  const checked = document.getElementById('engagementCheck').checked;
+
+  if (!nom || !prenom || !service || !fonction) {
+    showToast('Veuillez remplir vos informations personnelles.', '#DC2626');
+    return;
+  }
+
+  const items = Array.from(document.querySelectorAll('#materiel-list .materiel-item')).map((item) => {
+    const internalId = item.id.replace('item-','');
+    return {
+      type: document.getElementById(`type-${internalId}`)?.value || '',
+      quantite: document.getElementById(`qte-${internalId}`)?.value || '1',
+      destination: document.getElementById(`dest-${internalId}`)?.value.trim() || '',
+      logiciels: document.getElementById(`softs-${internalId}`)?.value.trim() || ''
+    };
+  });
+
+  if (items.length === 0) {
+    showToast('Veuillez ajouter au moins un équipement.', '#DC2626');
+    return;
+  }
+  
+  for (let i = 0; i < items.length; i++) {
+    if (!items[i].destination) {
+      showToast(`Veuillez indiquer la destination pour l'Équipement ${i + 1}.`, '#DC2626');
+      return;
+    }
+    if (items[i].type === 'PC Portable' && !items[i].logiciels) {
+      showToast('Veuillez spécifier les logiciels requis pour le PC Portable.', '#DC2626');
+      return;
+    }
+  }
+
+  if (!dateDebut || !motif) {
+    showToast('Veuillez préciser la date d\'ouverture et le motif de votre projet.', '#DC2626');
+    return;
+  }
+
+  if (!checked) {
+    showToast('Vous devez accepter la charte d\'engagement.', '#DC2626');
+    return;
+  }
+
+  const { sujet, corpsMail } = genererCorpsMail();
+
+  // Éléments visuels du bouton de chargement
+  const btn = document.getElementById('btnSendEmail');
+  const btnText = document.getElementById('btnText');
+  const btnSpinner = document.getElementById('btnSpinner');
+  const btnIcon = document.getElementById('btnIcon');
+
+  // Activation de l'état de chargement
+  btn.disabled = true;
+  btnText.textContent = 'Envoi en cours...';
+  btnSpinner.style.display = 'block';
+  btnIcon.style.display = 'none';
+
+  try {
+    // Appel direct à l'API de Web3Forms (Zéro dépendance locale)
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: "d5781fbc-be21-4855-a11f-0d5c4458c302", // <-- Mets la clé d'accès Web3Forms générée ici
+        subject: sujet,
+        from_name: `${prenom} ${nom}`,
+        message: corpsMail
+      })
+    });
+
+    if (response.ok) {
+      showToast('✓ Demande envoyée avec succès !', '#16A34A');
+      setTimeout(() => {
+        resetFormulaire();
+        resetButton(btn, btnText, btnSpinner, btnIcon);
+      }, 2000);
+    } else {
+      showToast('Erreur lors du traitement de la demande.', '#DC2626');
+      resetButton(btn, btnText, btnSpinner, btnIcon);
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    showToast('Erreur réseau. Vérifiez votre connexion Internet.', '#DC2626');
+    resetButton(btn, btnText, btnSpinner, btnIcon);
+  }
+}
+
+function resetButton(btn, textEl, spinnerEl, iconEl) {
+  btn.disabled = false;
+  textEl.textContent = 'Envoyer la demande';
+  spinnerEl.style.display = 'none';
+  iconEl.style.display = 'block';
+}
+
+function resetFormulaire() {
+  document.getElementById('nom').value = '';
+  document.getElementById('prenom').value = '';
+  document.getElementById('fonction').value = '';
+  document.getElementById('service').value = '';
+  document.getElementById('dateFin').value = '';
+  document.getElementById('motif').value = '';
+  document.getElementById('engagementCheck').checked = false;
+  document.getElementById('dateDebut').value = today();
+  document.getElementById('reqNum').textContent = generateTicketNumber();
+  document.getElementById('materiel-list').innerHTML = '';
+  itemCount = 0;
+  addItem();
+}
+
+function showToast(msg, color='#16A34A') {
+  const t = document.getElementById('toast');
+  if (!t) return;
+
+  document.getElementById('toastMsg').textContent = msg;
+  t.style.background = color;
+  t.classList.remove('show');
+  window.clearTimeout(showToast._timer);
+  window.requestAnimationFrame(() => t.classList.add('show'));
+  showToast._timer = window.setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

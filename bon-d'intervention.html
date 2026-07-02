@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demande d'Intervention Informatique</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&family=Roboto+Mono:wght=400;500&display=swap');
+
+  :root {
+    --blue-deep: #1A3A5C;
+    --blue-mid: #2D7DD2;
+    --blue-light: #E8F1FB;
+    --blue-pale: #F0F6FF;
+    --ink: #0D1B2A;
+    --muted: #64748B;
+    --border: #CBD5E1;
+    --bg: #F1F5F9;
+    --white: #FFFFFF;
+    --green: #16A34A;
+    --green-light: #DCFCE7;
+    --red: #DC2626;
+    --orange: #EA580C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  /* ─── Header Centré ──────────────── */
+  .page-header {
+    max-width: 960px;
+    margin: 0 auto 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .header-logo {
+    width: 56px; height: 56px;
+    background: var(--blue-mid);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .header-logo svg { width: 30px; height: 30px; }
+  
+  .header-text { text-align: center; }
+  .header-text h1 {
+    font-size: 1.35rem; font-weight: 700;
+    color: var(--blue-deep); line-height: 1.2;
+  }
+  .header-text p {
+    font-size: 0.82rem; color: var(--muted); margin-top: 3px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── Card Principal ──────────────────────── */
+  .card {
+    max-width: 960px;
+    margin: 0 auto 20px;
+    background: var(--white);
+    border-radius: 18px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(26,58,92,.07);
+  }
+  .card-band {
+    height: 6px;
+    background: linear-gradient(90deg, var(--blue-mid) 0%, var(--blue-deep) 100%);
+  }
+  .card-body { padding: 32px 36px 36px; }
+
+  /* ─── Section titles ──────────────────────── */
+  .section-title {
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--blue-mid);
+    border-left: 3px solid var(--blue-mid);
+    padding-left: 10px;
+    margin-bottom: 18px;
+  }
+
+  /* ─── Grid fields ─────────────────────────── */
+  .field-grid {
+    display: grid;
+    gap: 14px 20px;
+    margin-bottom: 14px;
+  }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g1 { grid-template-columns: 1fr; }
+
+  .field label {
+    display: block;
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 13px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--white);
+    transition: border-color .18s, box-shadow .18s;
+    outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--blue-mid);
+    box-shadow: 0 0 0 3px rgba(45,125,210,.12);
+  }
+  .field textarea { resize: vertical; min-height: 90px; }
+
+  /* ─── Cadres individuels pour les Matériels ─── */
+  .sub-mat-block {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+  .sub-mat-title {
+    font-size: 0.78rem; font-weight: 700; 
+    color: var(--blue-deep);
+    margin-bottom: 14px; 
+    text-transform: uppercase; letter-spacing: 0.05em;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 6px;
+  }
+
+  /* ─── Grille Panne à 4 Colonnes Alignées ─── */
+  .panne-grid-container {
+    background: var(--blue-pale);
+    border: 1.5px solid #BFDBFE;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  
+  .panne-grid-header {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 24px !important;
+    background: var(--blue-deep);
+    color: var(--white);
+    padding: 14px 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+  }
+
+  .panne-grid-header > div { width: 100%; text-align: center; }
+
+  .panne-columns {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 24px !important;
+  }
+  
+  .panne-column { 
+    display: flex !important; 
+    flex-direction: column !important; 
+    gap: 12px !important; 
+  }
+
+  .checkbox-item {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    background: var(--white) !important;
+    padding: 12px 14px !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    margin-bottom: 2px !important;
+  }
+  .checkbox-item:hover {
+    border-color: var(--blue-mid) !important;
+    background: var(--blue-light) !important;
+  }
+  .checkbox-item input {
+    margin-top: 2px !important;
+    width: 15px !important; height: 15px !important;
+    cursor: pointer;
+  }
+  .checkbox-item label {
+    font-size: 0.8rem !important;
+    color: var(--ink) !important;
+    line-height: 1.3 !important;
+    cursor: pointer;
+  }
+
+  .input-autre {
+    display: none;
+    width: 100%;
+    margin-top: 6px;
+    margin-bottom: 10px;
+    padding: 7px 11px;
+    font-size: 0.8rem;
+    border: 1.5px dashed var(--blue-mid);
+    border-radius: 6px;
+    outline: none;
+  }
+  .input-autre:focus {
+    border-style: solid;
+    box-shadow: 0 0 0 2px rgba(45,125,210,.1);
+  }
+  .input-autre:required {
+    border-color: var(--orange);
+  }
+
+  .field-precision { margin-top: 15px; display: none; }
+  .field-observations { margin-top: 15px; }
+  .divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+
+  /* ─── Footer actions ──────────────────────── */
+  .form-actions {
+    max-width: 960px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+
+  .btn-send-flask {
+    background: #16A34A; color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 36px; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: background .2s;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+    width: 100%; max-width: 400px; justify-content: center;
+  }
+  .btn-send-flask:hover { background: #15803D; }
+
+  /* ─── Fenêtre Popup Modale ────────────────── */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 27, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+  .modal-box {
+    background: var(--white);
+    padding: 30px; border-radius: 16px;
+    max-width: 480px; width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+    border: 1px solid var(--border);
+    transform: scale(0.9); transition: transform 0.3s ease;
+  }
+  .modal-overlay.active .modal-box { transform: scale(1); }
+
+  .modal-icon {
+    width: 60px; height: 60px; background: var(--blue-pale);
+    color: var(--blue-mid); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .modal-box h3 { color: var(--blue-deep); font-size: 1.2rem; margin-bottom: 10px; font-weight: 700; }
+  .modal-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 24px; }
+  
+  .btn-modal-action {
+    background: var(--blue-mid); color: var(--white);
+    border: none; border-radius: 8px; padding: 12px 24px;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.2s;
+  }
+  .btn-modal-action:hover { background: #1E60A9; }
+
+  #toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--green); color: #fff;
+    border-radius: 12px; padding: 14px 22px;
+    font-size: 0.9rem; font-weight: 600;
+    box-shadow: 0 6px 24px rgba(0,0,0,.15);
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .3s, transform .3s;
+    pointer-events: none; z-index: 999;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 992px) {
+    .card-body { padding: 20px 18px 24px; }
+    .panne-columns { grid-template-columns: 1fr !important; }
+    .panne-grid-header { display: none !important; }
+  }
+
+  .demande-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--muted);
+    background: var(--bg);
+    border-radius: 7px; padding: 5px 12px;
+  }
+  .card-top-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 26px; flex-wrap: wrap; gap: 10px;
+  }
+
+  .required-star { color: var(--red); margin-left: 2px; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .card { border: none; box-shadow: none; }
+    .form-actions, .card-band { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 20h9M3 20v-8a2 2 0 012-2h14a2 2 0 012 2v8M12 4v6M8 7h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>COLLEGE ASSELIN DE BEAUVILLE</h1>
+    <p>Demande d'intervention informatique</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-band"></div>
+  <div class="card-body">
+
+    <div class="card-top-row">
+      <div class="demande-number">Ticket N° <span id="reqNum">—</span></div>
+    </div>
+
+    <div class="section-title">Demandeur</div>
+    <div class="field-grid g2">
+      <div class="field">
+        <label>Nom du demandeur <span class="required-star">*</span></label>
+        <input type="text" id="nom" placeholder="Ex : Martin" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Prénom du demandeur <span class="required-star">*</span></label>
+        <input type="text" id="prenom" placeholder="Ex : Thomas" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field-grid g2">
+      <div class="field">
+        <label>Service <span class="required-star">*</span></label>
+        <select id="service">
+          <option value="">— Sélectionner —</option>
+          <option>Administratif</option>
+          <option>Secrétariat</option>
+          <option>Informatique</option>
+          <option>Reprographie</option>
+          <option>Intendance</option>
+          <option>Pédagogique</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fonction <span class="required-star">*</span></label>
+        <input type="text" id="fonction" placeholder="Ex : Enseignant, Responsable informatique..." autocomplete="off">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-title">Suivi du Ticket</div>
+    <div class="field-grid g3">
+      <div class="field">
+        <label>Date d'ouverture <span class="required-star">*</span></label>
+        <input type="date" id="dateDebut">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-title">Nature de la panne (Cochez la ou les cases correspondantes)</div>
+    <div class="panne-grid-container">
+      <div class="panne-grid-header">
+        <div>Ordinateur / Tablette</div>
+        <div>Imprimante</div>
+        <div>Vidéoprojecteur</div>
+        <div>Autres</div>
+      </div>
+      
+      <div class="panne-columns">
+        <div class="panne-column">
+          <div class="checkbox-item"><input type="checkbox" id="p1" name="panne_pc" value="Problème de démarrage" onchange="surveillerFormulaire()"><label for="p1">Problème de démarrage</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="p2" name="panne_pc" value="Problème de connexion" onchange="surveillerFormulaire()"><label for="p2">Problème de connexion</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="p3" name="panne_pc" value="Perte de la connexion au réseau filaire" onchange="surveillerFormulaire()"><label for="p3">Perte de la connexion au réseau filaire</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="p4" name="panne_pc" value="Perte de la connexion au réseau WIFI" onchange="surveillerFormulaire()"><label for="p4">Perte de la connexion au réseau WIFI</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="p5" name="panne_pc" value="Problème de lancement d'une application (*1)" onchange="surveillerFormulaire()"><label for="p5">Problème de lancement d'une application (*1)</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="p6" name="panne_pc" value="Problème de connexion à une application" onchange="surveillerFormulaire()"><label for="p6">Problème de connexion à une application</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="p7" name="panne_pc" value="Problème de droits à une application" onchange="surveillerFormulaire()"><label for="p7">Problème de droits à une application</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="p8" name="panne_pc" value="Matériel manquant (*2)" onchange="surveillerFormulaire()"><label for="p8">Matériel manquant (*2)</label></div>
+          <div>
+            <div class="checkbox-item"><input type="checkbox" id="p9" name="panne_pc" value="Autre(s)" onchange="toggleAutreInput(this, 'txt_autre_pc'); surveillerFormulaire();"><label for="p9">Autre(s) : (précisez)</label></div>
+            <input type="text" id="txt_autre_pc" class="input-autre" placeholder="Précisez la panne..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="panne-column">
+          <div class="checkbox-item"><input type="checkbox" id="i1" name="panne_imp" value="Problème d'impression" onchange="surveillerFormulaire()"><label for="i1">Problème d'impression</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="i2" name="panne_imp" value="Problème de rattachement" onchange="surveillerFormulaire()"><label for="i2">Problème de rattachement</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="i3" name="panne_imp" value="Problème de paramétrage" onchange="surveillerFormulaire()"><label for="i3">Problème de paramétrage</label></div>
+          <div>
+            <div class="checkbox-item"><input type="checkbox" id="i4" name="panne_imp" value="Autre(s)" onchange="toggleAutreInput(this, 'txt_autre_imp'); surveillerFormulaire();"><label for="i4">Autre(s) : (précisez)</label></div>
+            <input type="text" id="txt_autre_imp" class="input-autre" placeholder="Précisez la panne..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="panne-column">
+          <div class="checkbox-item"><input type="checkbox" id="v1" name="panne_vp" value="Problème de démarrage" onchange="surveillerFormulaire()"><label for="v1">Problème de démarrage</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="v2" name="panne_vp" value="Problème de paramétrage" onchange="surveillerFormulaire()"><label for="v2">Problème de paramétrage</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="v3" name="panne_vp" value="Matériel manquant (*2)" onchange="surveillerFormulaire()"><label for="v3">Matériel manquant (*2)</label></div>
+          <div>
+            <div class="checkbox-item"><input type="checkbox" id="v4" name="panne_vp" value="Autre(s)" onchange="toggleAutreInput(this, 'txt_autre_vp'); surveillerFormulaire();"><label for="v4">Autre(s) : (précisez)</label></div>
+            <input type="text" id="txt_autre_vp" class="input-autre" placeholder="Précisez la panne..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="panne-column">
+          <div class="checkbox-item"><input type="checkbox" id="a1" name="panne_aut" value="Problème de réseau global" onchange="surveillerFormulaire()"><label for="a1">Problème de réseau global</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="a2" name="panne_aut" value="Problème de téléphonie IP" onchange="surveillerFormulaire()"><label for="a2">Problème de téléphonie IP</label></div>
+          <div class="checkbox-item"><input type="checkbox" id="a3" name="panne_aut" value="Problème de sonorisation / audio" onchange="surveillerFormulaire()"><label for="a3">Problème de sonorisation / audio</label></div>
+          <div>
+            <div class="checkbox-item"><input type="checkbox" id="a4" name="panne_aut" value="Autre(s)" onchange="toggleAutreInput(this, 'txt_autre_gen'); surveillerFormulaire();"><label for="a4">Autre(s) : (précisez)</label></div>
+            <input type="text" id="txt_autre_gen" class="input-autre" placeholder="Précisez la panne..." autocomplete="off">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sectionPC" style="display:none;">
+      <hr class="divider">
+      <div class="section-title">Informations sur l'ordinateur / tablette</div>
+      <div id="block_pc_inputs" class="sub-mat-block">
+        <div class="sub-mat-title">💻 Spécifications de l'ordinateur / tablette</div>
+        <div class="field-grid g3">
+          <div class="field"><label>Marque <span class="required-star">*</span></label><input type="text" id="pcMarque" placeholder="Ex : HP, Dell, Lenovo..." autocomplete="off"></div>
+          <div class="field"><label>Modèle <span class="required-star">*</span></label><input type="text" id="pcModele" placeholder="Ex : ProDesk 400..." autocomplete="off"></div>
+          <div class="field"><label>N° Série / Étiquette</label><input type="text" id="pcSerie" placeholder="Ex: S/N... (Optionnel)" autocomplete="off"></div>
+        </div>
+        
+        <div class="field-grid g1" style="margin-top: 15px;">
+          <div id="wrapper_precisionApp" class="field field-precision">
+            <label>(*1) Précisez l'application concernée et le message d'erreur <span class="required-star">*</span></label>
+            <input type="text" id="precisionApp" placeholder="Nom de l'application et message d'erreur" autocomplete="off">
+          </div>
+          <div id="wrapper_precisionManquantPC" class="field field-precision">
+            <label>(*2) Précisez le matériel manquant pour l'ordinateur ou la tablette <span class="required-star">*</span></label>
+            <input type="text" id="precisionManquantPC" placeholder="Ex: Souris, clavier, câble d'alimentation..." autocomplete="off">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sectionImp" style="display:none;">
+      <hr class="divider">
+      <div class="section-title">Informations sur l'imprimante</div>
+      <div id="block_imp_inputs" class="sub-mat-block">
+        <div class="sub-mat-title">🖨️ Spécifications de l'imprimante</div>
+        <div class="field-grid g3">
+          <div class="field"><label>Marque <span class="required-star">*</span></label><input type="text" id="impMarque" placeholder="Ex : Epson, Brother..." autocomplete="off"></div>
+          <div class="field"><label>Modèle <span class="required-star">*</span></label><input type="text" id="impModele" placeholder="Ex : LaserJet M404..." autocomplete="off"></div>
+          <div class="field"><label>N° Série / Étiquette</label><input type="text" id="impSerie" placeholder="Ex : S/N... (Optionnel)" autocomplete="off"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sectionVP" style="display:none;">
+      <hr class="divider">
+      <div class="section-title">Informations du vidéoprojecteur</div>
+      <div id="block_vp_inputs" class="sub-mat-block" style="display:none;">
+        <div class="sub-mat-title">📽️ Spécifications du Vidéoprojecteur</div>
+        <div class="field-grid g3">
+          <div class="field"><label>Marque <span class="required-star">*</span></label><input type="text" id="vpMarque" placeholder="Ex : BenQ, Epson..." autocomplete="off"></div>
+          <div class="field"><label>Modèle <span class="required-star">*</span></label><input type="text" id="vpModele" placeholder="Ex : EB-X05..." autocomplete="off"></div>
+          <div class="field"><label>N° Série / Étiquette</label><input type="text" id="vpSerie" placeholder="Ex : S/N... (Optionnel)" autocomplete="off"></div>
+        </div>
+        
+        <div class="field-grid g1" style="margin-top: 15px;">
+          <div id="wrapper_precisionManquantVP" class="field field-precision">
+            <label>(*2) Précisez le matériel manquant pour le vidéoprojecteur <span class="required-star">*</span></label>
+            <input type="text" id="precisionManquantVP" placeholder="Ex: Télécommande, câble HDMI..." autocomplete="off">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sectionAut" style="display:none;">
+      <hr class="divider">
+      <div class="section-title">Informations de l'autre équipement</div>
+      <div id="block_aut_inputs" class="sub-mat-block" style="display:none;">
+        <div class="sub-mat-title">⚙️ Spécifications de l'autre équipement (Réseau, Audio, etc.)</div>
+        <div class="field-grid g3">
+          <div class="field"><label>Marque <span class="required-star">*</span></label><input type="text" id="autMarque" placeholder="Ex : Cisco, JBL..." autocomplete="off"></div>
+          <div class="field"><label>Modèle <span class="required-star">*</span></label><input type="text" id="autModele" placeholder="Ex : Switch 24 ports..." autocomplete="off"></div>
+          <div class="field"><label>N° Série / Étiquette</label><input type="text" id="autSerie" placeholder="Ex : Localisation... (Optionnel)" autocomplete="off"></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="field-grid g1">
+      <div class="field field-observations">
+        <label>Observations : précisez de manière détaillée votre panne <span class="required-star">*</span></label>
+        <textarea id="observations" placeholder="Veuillez décrire le comportement anormal rencontré...&#10;NB : Lorsque votre incident sera résolu, vous serez notifié via un message dans Pronote."></textarea>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="form-actions">
+  <button class="btn-send-flask" onclick="validerEtPreparerInc()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    Transmettre l'incident
+  </button>
+</div>
+
+<div id="popupConfirmation" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+    </div>
+    <h3>Prêt pour l'envoi</h3>
+    <p>Votre demande va être directement transmise de manière sécurisée au support informatique.<br><br><strong>Un e-mail de notification vous sera envoyé.</strong></p>
+    <button class="btn-modal-action" onclick="ouvrirMessagerieEtSauvegarder()">
+      Confirmer et Envoyer
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 5"></polyline></svg>
+    </button>
+  </div>
+</div>
+
+<div id="toast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">Ticket prêt !</span>
+</div>
+
+<script>
+const EMAIL_SUPPORT = "assistance.informatique@college-asselin.fr"; 
+let currentPayload = null; 
+
+function init() {
+  document.getElementById('dateDebut').value = today();
+  document.getElementById('reqNum').textContent = generateTicketNumber();
+}
+
+function surveillerFormulaire() {
+  const hasPC = document.querySelectorAll('input[name="panne_pc"]:checked').length > 0;
+  const hasImp = document.querySelectorAll('input[name="panne_imp"]:checked').length > 0;
+  const hasVP = document.querySelectorAll('input[name="panne_vp"]:checked').length > 0;
+  const hasAut = document.querySelectorAll('input[name="panne_aut"]:checked').length > 0;
+
+  document.getElementById('sectionPC').style.display = hasPC ? "block" : "none";
+  document.getElementById('sectionImp').style.display = hasImp ? "block" : "none";
+  document.getElementById('sectionVP').style.display = hasVP ? "block" : "none";
+  document.getElementById('sectionAut').style.display = hasAut ? "block" : "none";
+
+  document.getElementById('block_vp_inputs').style.display = hasVP ? "block" : "none";
+  document.getElementById('block_aut_inputs').style.display = hasAut ? "block" : "none";
+
+  const isP5Checked = document.getElementById('p5').checked;
+  document.getElementById('wrapper_precisionApp').style.display = isP5Checked ? "block" : "none";
+
+  const isP8Checked = document.getElementById('p8').checked;
+  document.getElementById('wrapper_precisionManquantPC').style.display = isP8Checked ? "block" : "none";
+
+  const isV3Checked = document.getElementById('v3').checked;
+  document.getElementById('wrapper_precisionManquantVP').style.display = isV3Checked ? "block" : "none";
+}
+
+function today() { return new Date().toISOString().slice(0,10); }
+
+function generateTicketNumber() {
+  const now = new Date();
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const rand = String(Math.floor(Math.random()*9000)+1000);
+  return `INC-${mm}-${rand}`;
+}
+
+function toggleAutreInput(checkbox, inputId) {
+  const inputTxt = document.getElementById(inputId);
+  if (checkbox.checked) {
+    inputTxt.style.display = "block";
+    inputTxt.setAttribute("required", "required");
+    inputTxt.focus();
+  } else {
+    inputTxt.style.display = "none";
+    inputTxt.removeAttribute("required");
+    inputTxt.value = ""; 
+  }
+}
+
+function collectDemandeData() {
+  const pannesPC = [];
+  const pannesImp = [];
+  const pannesVP = [];
+  const pannesAut = [];
+  
+  let infoPC = "";
+  let infoImp = "";
+  let infoVP = "";
+  let infoAut = "";
+  
+  let formValide = true;
+
+  document.querySelectorAll('.panne-columns input[type="checkbox"]:checked').forEach(cb => {
+    let typeMatos = cb.name.replace('panne_','').toUpperCase();
+    let valeurPanne = cb.value;
+    
+    if (valeurPanne === "Autre(s)") {
+      let idTexteAssocie = "";
+      if (cb.id === "p9") idTexteAssocie = "txt_autre_pc";
+      if (cb.id === "i4") idTexteAssocie = "txt_autre_imp";
+      if (cb.id === "v4") idTexteAssocie = "txt_autre_vp";
+      if (cb.id === "a4") idTexteAssocie = "txt_autre_gen";
+      
+      const texteSaisi = document.getElementById(idTexteAssocie).value.trim();
+      if (!texteSaisi) {
+        formValide = false;
+      }
+      valeurPanne = texteSaisi ? `Autre (${texteSaisi})` : "Autre (non précisé)";
+    }
+
+    if(typeMatos === "PC") pannesPC.push(valeurPanne);
+    if(typeMatos === "IMP") pannesImp.push(valeurPanne);
+    if(typeMatos === "VP") pannesVP.push(valeurPanne);
+    if(typeMatos === "AUT") pannesAut.push(valeurPanne);
+  });
+
+  if (pannesPC.length > 0) {
+    const ma = document.getElementById('pcMarque').value.trim();
+    const mo = document.getElementById('pcModele').value.trim();
+    const se = document.getElementById('pcSerie').value.trim();
+    // Le numéro de série n'est plus requis pour valider le formulaire
+    if (!ma || !mo) formValide = false;
+    infoPC = `PC [${ma} - ${mo}${se ? ' - S/N:' + se : ''}]`;
+  }
+
+  if (pannesImp.length > 0) {
+    const ma = document.getElementById('impMarque').value.trim();
+    const mo = document.getElementById('impModele').value.trim();
+    const se = document.getElementById('impSerie').value.trim();
+    if (!ma || !mo) formValide = false;
+    infoImp = `IMPR [${ma} - ${mo}${se ? ' - S/N:' + se : ''}]`;
+  }
+
+  if (pannesVP.length > 0) {
+    const ma = document.getElementById('vpMarque').value.trim();
+    const mo = document.getElementById('vpModele').value.trim();
+    const se = document.getElementById('vpSerie').value.trim();
+    if (!ma || !mo) formValide = false;
+    infoVP = `PROJ [${ma} - ${mo}${se ? ' - S/N:' + se : ''}]`;
+  }
+
+  if (pannesAut.length > 0) {
+    const ma = document.getElementById('autMarque').value.trim();
+    const mo = document.getElementById('autModele').value.trim();
+    const se = document.getElementById('autSerie').value.trim();
+    if (!ma || !mo) formValide = false;
+    infoAut = `AUTRE [${ma} - ${mo}${se ? ' - S/N:' + se : ''}]`;
+  }
+
+  const precApp = document.getElementById('precisionApp').value.trim();
+  if (document.getElementById('p5').checked && !precApp) formValide = false;
+
+  let affichageManquantStr = "—";
+  if (document.getElementById('p8').checked) {
+    const txt = document.getElementById('precisionManquantPC').value.trim();
+    if (!txt) formValide = false;
+    affichageManquantStr = `[PC]: ${txt}`;
+  }
+  if (document.getElementById('v3').checked) {
+    const txt = document.getElementById('precisionManquantVP').value.trim();
+    if (!txt) formValide = false;
+    affichageManquantStr = affichageManquantStr === "—" ? `[VP]: ${txt}` : `${affichageManquantStr} | [VP]: ${txt}`;
+  }
+
+  const itemsSurgis = [];
+  if (pannesPC.length > 0) itemsSurgis.push({ ref: infoPC, pannes: pannesPC.join(' / ') });
+  if (pannesImp.length > 0) itemsSurgis.push({ ref: infoImp, pannes: pannesImp.join(' / ') });
+  if (pannesVP.length > 0) itemsSurgis.push({ ref: infoVP, pannes: pannesVP.join(' / ') });
+  if (pannesAut.length > 0) itemsSurgis.push({ ref: infoAut, pannes: pannesAut.join(' / ') });
+
+  const globalRef = itemsSurgis.map(i => i.ref).join(' + ');
+  const globalPannes = itemsSurgis.map(i => i.pannes).join(' // ');
+
+  return {
+    ticketNumber: document.getElementById('reqNum').textContent.trim(),
+    nom: document.getElementById('nom').value.trim(),
+    prenom: document.getElementById('prenom').value.trim(),
+    dateDebut: document.getElementById('dateDebut').value,
+    materielRef: globalRef,
+    pannes: globalPannes,
+    items: itemsSurgis,
+    isInputsValid: formValide,
+    precisionApp: document.getElementById('p5').checked ? precApp : "—",
+    precisionManquant: affichageManquantStr,
+    observations: document.getElementById('observations').value.trim()
+  };
+}
+
+function validerEtPreparerInc() {
+  const payload = collectDemandeData();
+  
+  if (!payload.nom || !payload.prenom) {
+    showToast('Veuillez remplir vos informations (Nom et Prénom).', '#DC2626');
+    return;
+  }
+  if (payload.items.length === 0) {
+    showToast('Veuillez cocher au moins une panne.', '#DC2626');
+    return;
+  }
+  if (!payload.isInputsValid) {
+    showToast('Veuillez remplir tous les champs obligatoires visibles (marques, modèles ou précisions *).', '#DC2626');
+    return;
+  }
+  if (!payload.observations) {
+    showToast('Veuillez ajouter des précisions dans les Observations.', '#DC2626');
+    return;
+  }
+
+  currentPayload = payload;
+  document.getElementById('popupConfirmation').classList.add('active');
+}
+
+async function ouvrirMessagerieEtSauvegarder() {
+  if (!currentPayload) return;
+
+  document.getElementById('popupConfirmation').classList.remove('active');
+
+  const sujetMail = `[DOSSIER : ${currentPayload.ticketNumber}] - Demande de ${currentPayload.nom.toUpperCase()} ${currentPayload.prenom}`;
+  
+  const corpsMail = 
+    `DEMANDE D'INTERVENTION INFORMATIQUE\n` +
+    `----------------------------------------\n` +
+    `Ticket N° : ${currentPayload.ticketNumber}\n` +
+    `Demandeur : ${currentPayload.nom.toUpperCase()} ${currentPayload.prenom}\n` +
+    `Date d'ouverture : ${currentPayload.dateDebut}\n\n` +
+    `NATURE DE(S) PANNE(S) :\n` +
+    `${currentPayload.pannes.replace(/ \/\/ /g, '\n')}\n\n` +
+    `RÉFÉRENCE(S) MATÉRIEL(S) :\n` +
+    `${currentPayload.materielRef || "—"}\n\n` +
+    `PRÉCISIONS COMPLÉMENTAIRES :\n` +
+    `- Application / Erreur (*1) : ${currentPayload.precisionApp}\n` +
+    `- Matériel manquant (*2) : ${currentPayload.precisionManquant}\n\n` +
+    `OBSERVATIONS / DESCRIPTION :\n` +
+    `${currentPayload.observations}\n` +
+    `----------------------------------------\n` +
+    `NB : Lorsque votre incident sera résolu, vous serez notifié via Pronote.`;
+
+  showToast('Envoi du ticket en cours...', '#2D7DD2');
+
+  try {
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: "d5781fbc-be21-4855-a11f-0d5c4458c302",
+        subject: sujetMail,
+        from_name: `${currentPayload.prenom} ${currentPayload.nom.toUpperCase()}`,
+        message: corpsMail
+      })
+    });
+
+    if (response.ok) {
+      showToast('Incident transmis avec succès !', '#16A34A');
+    } else {
+      throw new Error("Erreur API");
+    }
+  } catch (error) {
+    console.error("Erreur Web3Forms:", error);
+    showToast("Échec de l'envoi direct. Ouverture de votre messagerie...", '#EA580C');
+    
+    const mailtoUrl = `mailto:${EMAIL_SUPPORT}?subject=${encodeURIComponent(sujetMail)}&body=${encodeURIComponent(corpsMail)}`;
+    window.location.href = mailtoUrl;
+  }
+
+  resetFormulaire();
+  currentPayload = null;
+}
+
+function resetFormulaire() {
+  document.getElementById('nom').value = '';
+  document.getElementById('prenom').value = '';
+  
+  const ids = ['pcMarque','pcModele','pcSerie','impMarque','impModele','impSerie','vpMarque','vpModele','vpSerie','autMarque','autModele','autSerie','precisionApp','precisionManquantPC','precisionManquantVP','observations'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+
+  document.querySelectorAll('.panne-columns input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.input-autre').forEach(i => { i.style.display = "none"; i.value = ""; });
+  
+  surveillerFormulaire();
+
+  document.getElementById('dateDebut').value = today();
+  document.getElementById('reqNum').textContent = generateTicketNumber();
+}
+
+function showToast(msg, color='#16A34A') {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.style.background = color;
+  t.classList.add('show');
+  window.setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

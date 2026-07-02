@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demande de Prêt de Matériel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+  :root {
+    --blue-deep: #1A3A5C;
+    --blue-mid: #2D7DD2;
+    --blue-light: #E8F1FB;
+    --blue-pale: #F0F6FF;
+    --ink: #0D1B2A;
+    --muted: #64748B;
+    --border: #CBD5E1;
+    --bg: #F1F5F9;
+    --white: #FFFFFF;
+    --green: #16A34A;
+    --green-light: #DCFCE7;
+    --red: #DC2626;
+    --orange: #EA580C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  /* Header Centré */
+  .page-header {
+    max-width: 960px;
+    margin: 0 auto 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .header-logo {
+    width: 56px; height: 56px;
+    background: var(--blue-mid);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .header-logo svg { width: 30px; height: 30px; }
+  
+  .header-text { text-align: center; }
+  .header-text h1 {
+    font-size: 1.35rem; font-weight: 700;
+    color: var(--blue-deep); line-height: 1.2;
+  }
+  .header-text p {
+    font-size: 0.82rem; color: var(--muted); margin-top: 3px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Card Principal */
+  .card {
+    max-width: 960px;
+    margin: 0 auto 20px;
+    background: var(--white);
+    border-radius: 18px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(26,58,92,.07);
+  }
+  .card-band {
+    height: 6px;
+    background: linear-gradient(90deg, var(--blue-mid) 0%, var(--blue-deep) 100%);
+  }
+  .card-body { padding: 32px 36px 36px; }
+
+  /* Section titles */
+  .section-title {
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--blue-mid);
+    border-left: 3px solid var(--blue-mid);
+    padding-left: 10px;
+    margin-bottom: 18px;
+  }
+
+  /* Grid fields */
+  .field-grid {
+    display: grid;
+    gap: 14px 20px;
+    margin-bottom: 14px;
+  }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 2fr 1fr 2fr; }
+  .g1 { grid-template-columns: 1fr; }
+
+  .field label {
+    display: block;
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 13px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--white);
+    transition: border-color .18s, box-shadow .18s;
+    outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--blue-mid);
+    box-shadow: 0 0 0 3px rgba(45,125,210,.12);
+  }
+  .field textarea { resize: vertical; min-height: 90px; }
+
+  /* --- Styles pour l'Ajout Dynamique de Matériel --- */
+  .pret-grid-container {
+    background: var(--blue-pale);
+    border: 1.5px solid #BFDBFE;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .materiel-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .item-badge {
+    background: var(--blue-deep);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+  }
+
+  .btn-remove-item {
+    background: transparent;
+    border: none;
+    color: var(--red);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .btn-remove-item:hover {
+    background: #FEE2E2;
+  }
+
+  .software-field-box {
+    margin-top: 12px;
+    background: #FFF7ED;
+    border: 1.5px dashed var(--orange);
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .btn-add-item {
+    background: var(--blue-mid);
+    color: var(--white);
+    border: none;
+    border-radius: 9px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+  .btn-add-item:hover {
+    background: #1E60A9;
+  }
+
+  .field-motif { margin-top: 15px; }
+  .divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+
+  /* Footer actions */
+  .form-actions {
+    max-width: 960px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+
+  .btn-send-flask {
+    background: #16A34A; color: #fff;
+    border: none; border-radius: 10px;
+    padding: 14px 36px; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: background .2s;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+    width: 100%; max-width: 400px; justify-content: center;
+  }
+  .btn-send-flask:hover { background: #15803D; }
+
+  /* Popup Modale */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 27, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+  .modal-box {
+    background: var(--white);
+    padding: 30px; border-radius: 16px;
+    max-width: 480px; width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+    border: 1px solid var(--border);
+    transform: scale(0.9); transition: transform 0.3s ease;
+  }
+  .modal-overlay.active .modal-box { transform: scale(1); }
+
+  .modal-icon {
+    width: 60px; height: 60px; background: var(--blue-pale);
+    color: var(--blue-mid); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .modal-box h3 { color: var(--blue-deep); font-size: 1.2rem; margin-bottom: 10px; font-weight: 700; }
+  .modal-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 24px; }
+  
+  .btn-modal-action {
+    background: var(--blue-mid); color: var(--white);
+    border: none; border-radius: 8px; padding: 12px 24px;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.2s;
+  }
+  .btn-modal-action:hover { background: #1E60A9; }
+
+  #toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--green); color: #fff;
+    border-radius: 12px; padding: 14px 22px;
+    font-size: 0.9rem; font-weight: 600;
+    box-shadow: 0 6px 24px rgba(0,0,0,.15);
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .3s, transform .3s;
+    pointer-events: none; z-index: 999;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .card-body { padding: 20px 18px 24px; }
+    .field-grid.g3 { grid-template-columns: 1fr; }
+  }
+
+  .loan-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--muted);
+    background: var(--bg);
+    border-radius: 7px; padding: 5px 12px;
+  }
+  .card-top-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 26px; flex-wrap: wrap; gap: 10px;
+  }
+  .required-star { color: var(--red); margin-left: 2px; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .card { border: none; box-shadow: none; }
+    .form-actions, .card-band, .btn-add-item, .btn-remove-item { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>COLLEGE ASSELIN DE BEAUVILLE</h1>
+    <p>Fiche de prêt de matériel informatique</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-band"></div>
+  <div class="card-body">
+
+    <div class="card-top-row">
+      <div class="loan-number">Prêt N° <span id="reqNum">—</span></div>
+    </div>
+
+    <div class="section-title">Demandeur</div>
+    
+    <div class="field-grid g2">
+      <div class="field">
+        <label>Nom <span class="required-star">*</span></label>
+        <input type="text" id="nom" placeholder="Ex : Dupond" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Prénom <span class="required-star">*</span></label>
+        <input type="text" id="prenom" placeholder="Ex : Pierre" autocomplete="off">
+      </div>
+    </div>
+     
+    <div class="field-grid g2" style="margin-top: 20px;">
+      <div class="field">
+        <label>Service <span class="required-star">*</span></label>
+        <select id="service">
+          <option value="">— Sélectionner —</option>
+          <option>Administratif</option>
+          <option>Secrétariat</option>
+          <option>Informatique</option>
+          <option>Reprographie</option>
+          <option>Intendance</option>
+          <option>Pédagogique</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fonction <span class="required-star">*</span></label>
+        <input type="text" id="fonction" placeholder="Ex : Enseignant, Responsable informatique..." autocomplete="off">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-title">Période du Prêt</div>
+    <div class="field-grid g2">
+      <div class="field">
+        <label>Date de début de prêt <span class="required-star">*</span></label>
+        <input type="date" id="dateDebut">
+      </div>
+      <div class="field">
+        <label>Date de restitution prévue (estimer)<span class="required-star">*</span></label>
+        <input type="date" id="dateFin">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-title">Matériel demandé</div>
+    <div class="pret-grid-container">
+      <div id="materiel-list">
+        </div>
+      <button type="button" class="btn-add-item" onclick="addItem()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Ajouter un matériel
+      </button>
+    </div>
+
+    <hr class="divider">
+    <div class="field-grid g1">
+      <div class="field field-motif">
+        <label>Motif du prêt / Observations particulières <span class="required-star">*</span></label>
+        <textarea id="motif" placeholder="Précisez ici les raisons de votre demande de prêt...&#10;NB : Vous recevrez un e-mail de confirmation une fois la demande validée par l'administration."></textarea>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="form-actions">
+  <button class="btn-send-flask" onclick="validerEtPreparerPret()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    Transmettre la demande
+  </button>
+</div>
+
+<div id="popupConfirmation" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+    </div>
+    <h3>Prêt pour l'envoi</h3>
+    <p>Votre demande de prêt va être envoyée directement au service de gestion informatique.<br><br><strong>Un e-mail récapitulatif vous sera adressé.</strong></p>
+    <button class="btn-modal-action" onclick="transmettreDirectement()">
+      Confirmer et Envoyer
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 5"></polyline></svg>
+    </button>
+  </div>
+</div>
+
+<div id="toast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">Demande prête !</span>
+</div>
+
+<script>
+let currentPayload = null;
+let itemCount = 0;
+
+const TYPES = [
+ 'PC Portable','PC Bureau','Écran','Clavier','Souris','Câble HDMI','Câble VGA','Câble réseau','Câble alimentation',
+  'Vidéoprojecteur Focal long','Vidéoprojecteur Focal court','Tablette','Imprimante','Scanner','Webcam','Casque audio','Disque dur','Clé USB','Hub USB',
+  'Adaptateur','Chargeur'
+];
+
+function init() {
+  document.getElementById('dateDebut').value = today();
+  document.getElementById('reqNum').textContent = generateLoanNumber();
+  addItem();
+}
+
+function today() { return new Date().toISOString().slice(0,10); }
+
+function generateLoanNumber() {
+  const now = new Date();
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const rand = String(Math.floor(Math.random()*9000)+1000);
+  return `PRT-${mm}-${rand}`;
+}
+
+function addItem() {
+  itemCount++;
+  const id = itemCount;
+  const list = document.getElementById('materiel-list');
+  const opts = TYPES.map(t => `<option value="${t === '— Sélectionner —' ? '' : t}">${t}</option>`).join('');
+  
+  const div = document.createElement('div');
+  div.className = 'materiel-item';
+  div.id = `item-${id}`;
+  div.innerHTML = `
+    <div class="item-header">
+      <span class="item-badge">Équipement ${id}</span>
+      <button type="button" class="btn-remove-item" onclick="removeItem(${id})" title="Supprimer">✕</button>
+    </div>
+    <div class="field-grid g3">
+      <div class="field">
+        <label>Type de matériel <span class="required-star">*</span></label>
+        <select id="type-${id}" onchange="checkMaterialType(${id})">${opts}</select>
+      </div>
+      <div class="field">
+        <label>Quantité <span class="required-star">*</span></label>
+        <input type="number" id="qte-${id}" value="1" min="1" max="10">
+      </div>
+      <div class="field">
+        <label>Destination / Spécifications <span class="required-star">*</span></label>
+        <input type="text" id="dest-${id}" placeholder="Ex : Salle 104, détails..." autocomplete="off">
+      </div>
+    </div>
+    <div id="software-box-${id}" class="software-field-box" style="display: none;">
+    </div>
+  `;
+  list.appendChild(div);
+  checkMaterialType(id);
+}
+
+function removeItem(id) {
+  const items = document.querySelectorAll('.materiel-item');
+  if (items.length <= 1) {
+    showToast("Vous devez spécifier au moins un matériel.", "#DC2626");
+    return;
+  }
+  const el = document.getElementById(`item-${id}`);
+  if (el) el.remove();
+}
+
+function checkMaterialType(id) {
+  const selectEl = document.getElementById(`type-${id}`);
+  const softwareBox = document.getElementById(`software-box-${id}`);
+  
+  if (selectEl && (selectEl.value === 'PC Portable Enseignant' || selectEl.value === 'PC Portable Élève')) {
+    softwareBox.style.display = 'block';
+  } else {
+    softwareBox.style.display = 'none';
+    const softInput = document.getElementById('softs-' + id);
+    if (softInput) softInput.value = '';
+  }
+}
+
+function collectFormulaireData() {
+  const listeMat = [];
+  let erreurSaisie = false;
+  let erreurLogiciel = false;
+
+  document.querySelectorAll('.materiel-item').forEach(item => {
+    const id = item.id.split('-')[1];
+    const type = document.getElementById(`type-${id}`).value;
+    const qte = document.getElementById(`qte-${id}`).value;
+    const dest = document.getElementById(`dest-${id}`).value.trim();
+    const softs = document.getElementById(`softs-${id}`) ? document.getElementById(`softs-${id}`).value.trim() : '';
+
+    if (!type || !dest) {
+      erreurSaisie = true;
+    }
+
+    if ((type === 'PC Portable Enseignant' || type === 'PC Portable Élève') && !softs) {
+      erreurLogiciel = true;
+    }
+
+    let detail = `${qte}x ${type} (Dest: ${dest})`;
+    if ((type === 'PC Portable Enseignant' || type === 'PC Portable Élève') && softs) {
+      detail += ` [Logiciels: ${softs}]`;
+    }
+    listeMat.push(detail);
+  });
+
+  return {
+    ticketNumber: document.getElementById('reqNum').textContent.trim(),
+    nom: document.getElementById('nom').value.trim(),
+    prenom: document.getElementById('prenom').value.trim(),
+    fonction: document.getElementById('fonction').value.trim(),
+    service: document.getElementById('service').value,
+    dateDebut: document.getElementById('dateDebut').value,
+    dateFin: document.getElementById('dateFin').value,
+    materiels: listeMat.join(' / '),
+    nbMateriels: listeMat.length,
+    erreurMat: erreurSaisie,
+    erreurSoft: erreurLogiciel,
+    motif: document.getElementById('motif').value.trim()
+  };
+}
+
+function validerEtPreparerPret() {
+  const payload = collectFormulaireData();
+
+  if (!payload.nom || !payload.prenom || !payload.fonction || !payload.service) {
+    showToast('Veuillez remplir vos informations (Nom, Prénom, Fonction et Service).', '#DC2626');
+    return;
+  }
+  if (!payload.dateDebut || !payload.dateFin) {
+    showToast('Veuillez sélectionner les dates de début et de fin du prêt.', '#DC2626');
+    return;
+  }
+  if (payload.nbMateriels === 0) {
+    showToast('Veuillez ajouter au moins un matériel à emprunter.', '#DC2626');
+    return;
+  }
+  if (payload.erreurMat) {
+    showToast('Veuillez spécifier le Type et la Destination pour chaque matériel ajouté.', '#DC2626');
+    return;
+  
+  }
+  if (!payload.motif) {
+    showToast('Veuillez ajouter un motif ou des observations pour ce prêt.', '#DC2626');
+    return;
+  }
+
+  currentPayload = payload;
+  document.getElementById('popupConfirmation').classList.add('active');
+}
+
+async function transmettreDirectement() {
+  if (!currentPayload) return;
+
+  document.getElementById('popupConfirmation').classList.remove('active');
+
+  const sujetMail = `[PRÊT : ${currentPayload.ticketNumber}] - Demande de ${currentPayload.nom.toUpperCase()} ${currentPayload.prenom}`;
+  
+  const corpsMail = 
+    `DEMANDE DE PRÊT DE MATÉRIEL INFORMATIQUE\n` +
+    `----------------------------------------\n` +
+    `Numéro de Prêt  : ${currentPayload.ticketNumber}\n` +
+    `Demandeur       : ${currentPayload.nom.toUpperCase()} ${currentPayload.prenom}\n` +
+    `Fonction/Matière: ${currentPayload.fonction}\n` +
+    `Affectation     : ${currentPayload.service}\n` +
+    `Période du prêt : Du ${currentPayload.dateDebut} au ${currentPayload.dateFin}\n\n` +
+    `MATÉRIEL(S) DEMANDÉ(S) :\n` +
+    `${currentPayload.materiels.split(' / ').map(m => `- ${m}`).join('\n')}\n\n` +
+    `MOTIF DU PRÊT / OBSERVATIONS :\n` +
+    `${currentPayload.motif}\n` +
+    `----------------------------------------\n` +
+    `NB : Un e-mail de validation sera envoyé après étude de votre dossier.`;
+
+  showToast('Envoi de la demande en cours...', '#2D7DD2');
+
+  try {
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: "d5781fbc-be21-4855-a11f-0d5c4458c302",
+        subject: sujetMail,
+        from_name: `${currentPayload.prenom} ${currentPayload.nom.toUpperCase()}`,
+        message: corpsMail
+      })
+    });
+
+    if (response.ok) {
+      showToast('Demande transmise avec succès !', '#16A34A');
+      resetFormulaire();
+    } else {
+      throw new Error("Erreur de réponse de l'API");
+    }
+  } catch (error) {
+    console.error("Erreur Web3Forms:", error);
+    showToast("Échec de la transmission. Vérifiez votre connexion internet.", '#DC2626');
+  }
+
+  currentPayload = null;
+}
+
+function resetFormulaire() {
+  document.getElementById('nom').value = '';
+  document.getElementById('prenom').value = '';
+  document.getElementById('dateFin').value = '';
+  document.getElementById('motif').value = '';
+  document.getElementById('fonction').value = '';
+  document.getElementById('service').value = '';
+
+  document.getElementById('materiel-list').innerHTML = '';
+  itemCount = 0;
+  addItem();
+
+  document.getElementById('dateDebut').value = today();
+  document.getElementById('reqNum').textContent = generateLoanNumber();
+}
+
+function showToast(msg, color='#16A34A') {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.style.background = color;
+  t.classList.add('show');
+  window.setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+window.onload = init;
+</script>
+</body>
+</html>
